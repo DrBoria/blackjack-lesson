@@ -16,5 +16,5 @@ function shuffle(array) {
 shuffle(cards_playable);
 
 export const getCard = () => {
-    return cards_playable.shift();
+    return cards_playable.pop();
 }

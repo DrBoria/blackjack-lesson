@@ -11,29 +11,90 @@ import {
   Link
 } from "react-router-dom";
 import Registration from 'pages/Registration';
+import styles from './App.module.scss';
 
 function App() {
   // Model Section
-  const [player1Sum, setPlayer1Sum] = useState(0);
+  const [players, setPlayers] = useState([]);
   const [dealerSum, setDealerSum] = useState(0);
   const [isDealerTurnEnd, setIsDealerTurnEnd] = useState(false);
   const [globalPlayerName, setGlobalPlayerName] = useState('Player Name');
+  const [favoriteUsers, setFavoriteUsers] = useState([]);
 
   // Controller Section
-  const changeStatus = () => {
-    setIsDealerTurnEnd(true);
-  };
-  const takeCard = () => setPlayer1Sum(player1Sum + getCard());
+  const showResult = () => { setIsDealerTurnEnd(true) };
+  const isPlayersTurn = () => Boolean(players.filter(player => !player.endTurn).length)
+
   const dealerTurn = () => {
+    if (isPlayersTurn()) return;
+
+    let playerMaxValidSum = 0;
+    players.forEach(player => {
+      if (player.sum <= 21 && player.sum >= playerMaxValidSum) {
+        playerMaxValidSum = player.sum;
+      }
+    });
+
+    // set players who left - favorites
+    setFavoriteUsers(
+      players.filter(player => {
+        if (player.sum === playerMaxValidSum) {
+          return player
+        }
+      })
+    );
+
+    // Dealer turn
     let dealerSumLocal = dealerSum;
-    while (player1Sum < 22 && dealerSumLocal < player1Sum && dealerSumLocal <= 21) {
+    while (playerMaxValidSum < 22 && dealerSumLocal < playerMaxValidSum && dealerSumLocal <= 21) {
       dealerSumLocal += getCard();
     }
     setDealerSum(dealerSumLocal);
-    changeStatus();
+    showResult();
   }
-  const handleSetGlobalPlayerName = (name) => {
-    setGlobalPlayerName(name);
+
+  const takeCard = (playerName) => {
+    setPlayers(
+      players.map(player => {
+        if (player.name === playerName) {
+          player.sum = player.sum + getCard()
+        }
+        return player
+      })
+    );
+  }
+
+  const endTurn = (playerName) => {
+    setPlayers(
+      players.map(player => {
+        if (player.name === playerName) {
+          player.endTurn = true
+        }
+        return player
+      })
+    );
+
+    dealerTurn();
+  }
+
+  const addPlayer = () => {
+    setPlayers(
+      [
+        ...players,
+        { id: players.length, name: '', sum: 0, endTurn: false }
+      ]
+    )
+  }
+
+  const updatePlayerName = (playerId, playerName) => {
+    setPlayers(
+      players.map(player => {
+        if (player.id === playerId) {
+          player.name = playerName
+        }
+        return player
+      })
+    );
   }
 
   // View Section
@@ -53,13 +114,17 @@ function App() {
 
         <Switch>
           <Route path="/app">
-            <AskPopup userSum={player1Sum} takeCard={takeCard} endTurn={dealerTurn} />
-            <Player name={globalPlayerName} score={player1Sum} />
+            {players.map(player => (
+              <div className={styles.userContainer}>
+                <Player name={player.name} score={player.sum} />
+                <AskPopup userSum={player.sum} takeCard={() => takeCard(player.name)} endTurn={() => endTurn(player.name)} />
+              </div>
+            ))}
             <Player name='Dealer' score={dealerSum} />
-            {isDealerTurnEnd && <Alert dealerSum={dealerSum} userSum={player1Sum} />}
+            {isDealerTurnEnd && <Alert dealerSum={dealerSum} users={favoriteUsers} />}
           </Route>
           <Route path="/">
-            <Registration setGlobalPlayerName={handleSetGlobalPlayerName} />
+            <Registration addPlayer={addPlayer} players={players} updatePlayerName={updatePlayerName} />
           </Route>
         </Switch>
       </Router>

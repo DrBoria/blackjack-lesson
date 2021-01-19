@@ -1,14 +1,15 @@
 import React from 'react'
 import styles from './Alert.module.scss';
 
-export default function Alert({dealerSum, userSum}) {
+export default function Alert({dealerSum, users}) {
     let message;
-    if (userSum < dealerSum && dealerSum < 22 || dealerSum > 21) {
+    const userSum = users[0].sum;
+    if (userSum > 21 || userSum < dealerSum && dealerSum < 22) {
         message = "Дилер Вин";
     } else if (userSum === dealerSum) {
         message = "Победила дружба";
     } else {
-        message = "Выиграл юзер";
+        message = `Выиграл ${users.map(user => user.name)}`;
     }
 
     return (
