@@ -12,7 +12,11 @@ import {
 } from "react-router-dom";
 import Registration from 'pages/Registration';
 
-function App() {
+// Redux
+import { decrement, increment } from 'actionCreators/counter';
+import { connect } from 'react-redux';
+
+function App({ count, increment, decrement }) {
   // Model Section
   const [player1Sum, setPlayer1Sum] = useState(0);
   const [dealerSum, setDealerSum] = useState(0);
@@ -35,7 +39,7 @@ function App() {
   const handleSetGlobalPlayerName = (name) => {
     setGlobalPlayerName(name);
   }
-
+  console.log(count)
   // View Section
   return (
     <div className="App">
@@ -50,7 +54,9 @@ function App() {
             </li>
           </ul>
         </nav>
-
+        {count}
+        <button onClick={increment}>+</button>
+        <button onClick={decrement}>-</button>
         <Switch>
           <Route path="/app">
             <AskPopup userSum={player1Sum} takeCard={takeCard} endTurn={dealerTurn} />
@@ -67,4 +73,16 @@ function App() {
   );
 }
 
-export default App;
+const mapStateToProps = state => ({
+  count: state.counter.count
+})
+
+const mapDispatchToProps = dispatch => ({
+  increment: () => dispatch(increment()),
+  decrement: () => dispatch(decrement())
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
