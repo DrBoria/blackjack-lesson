@@ -13,7 +13,11 @@ import {
 import Registration from 'pages/Registration';
 import styles from './App.module.scss';
 
-function App() {
+// Redux
+import { decrement, increment } from 'actionCreators/counter';
+import { connect } from 'react-redux';
+
+function App({ count, increment, decrement }) {
   // Model Section
   const [players, setPlayers] = useState([]);
   const [dealerSum, setDealerSum] = useState(0);
@@ -96,7 +100,7 @@ function App() {
       })
     );
   }
-
+  console.log(count)
   // View Section
   return (
     <div className="App">
@@ -111,7 +115,9 @@ function App() {
             </li>
           </ul>
         </nav>
-
+        {count}
+        <button onClick={increment}>+</button>
+        <button onClick={decrement}>-</button>
         <Switch>
           <Route path="/app">
             {players.map(player => (
@@ -132,4 +138,16 @@ function App() {
   );
 }
 
-export default App;
+const mapStateToProps = state => ({
+  count: state.counter.count
+})
+
+const mapDispatchToProps = dispatch => ({
+  increment: () => dispatch(increment()),
+  decrement: () => dispatch(decrement())
+})
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
