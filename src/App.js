@@ -11,18 +11,17 @@ import {
   Link
 } from "react-router-dom";
 import Registration from 'pages/Registration';
-import styles from './App.module.scss';
 
 // Redux
 import { decrement, increment } from 'actionCreators/counter';
 import { connect } from 'react-redux';
+import AppPage from 'pages/AppPage';
 
 function App({ count, increment, decrement }) {
   // Model Section
   const [players, setPlayers] = useState([]);
   const [dealerSum, setDealerSum] = useState(0);
   const [isDealerTurnEnd, setIsDealerTurnEnd] = useState(false);
-  const [globalPlayerName, setGlobalPlayerName] = useState('Player Name');
   const [favoriteUsers, setFavoriteUsers] = useState([]);
 
   // Controller Section
@@ -81,26 +80,6 @@ function App({ count, increment, decrement }) {
     dealerTurn();
   }
 
-  const addPlayer = () => {
-    setPlayers(
-      [
-        ...players,
-        { id: players.length, name: '', sum: 0, endTurn: false }
-      ]
-    )
-  }
-
-  const updatePlayerName = (playerId, playerName) => {
-    setPlayers(
-      players.map(player => {
-        if (player.id === playerId) {
-          player.name = playerName
-        }
-        return player
-      })
-    );
-  }
-  console.log(count)
   // View Section
   return (
     <div className="App">
@@ -120,17 +99,10 @@ function App({ count, increment, decrement }) {
         <button onClick={decrement}>-</button>
         <Switch>
           <Route path="/app">
-            {players.map(player => (
-              <div className={styles.userContainer}>
-                <Player name={player.name} score={player.sum} />
-                <AskPopup userSum={player.sum} takeCard={() => takeCard(player.name)} endTurn={() => endTurn(player.name)} />
-              </div>
-            ))}
-            <Player name='Dealer' score={dealerSum} />
-            {isDealerTurnEnd && <Alert dealerSum={dealerSum} users={favoriteUsers} />}
+            <AppPage isDealerTurnEnd={isDealerTurnEnd} takeCard={takeCard} endTurn={endTurn} dealerSum={dealerSum} favoriteUsers={favoriteUsers} />
           </Route>
           <Route path="/">
-            <Registration addPlayer={addPlayer} players={players} updatePlayerName={updatePlayerName} />
+            <Registration />
           </Route>
         </Switch>
       </Router>
