@@ -14,15 +14,15 @@ import Registration from 'pages/Registration';
 import styles from './App.module.scss';
 
 // Redux
-import { decrement, increment } from 'actionCreators/counter';
+import { decrement, decrement2, increment } from 'actionCreators/counter';
 import { connect } from 'react-redux';
+import Header from 'components/Header/Header';
 
-function App({ count, increment, decrement }) {
+function App({ count, increment, decrement, decrement2 }) {
   // Model Section
   const [players, setPlayers] = useState([]);
   const [dealerSum, setDealerSum] = useState(0);
   const [isDealerTurnEnd, setIsDealerTurnEnd] = useState(false);
-  const [globalPlayerName, setGlobalPlayerName] = useState('Player Name');
   const [favoriteUsers, setFavoriteUsers] = useState([]);
 
   // Controller Section
@@ -115,9 +115,10 @@ function App({ count, increment, decrement }) {
             </li>
           </ul>
         </nav>
-        {count}
+        <Header />
         <button onClick={increment}>+</button>
         <button onClick={decrement}>-</button>
+        <button onClick={decrement2}>--</button>
         <Switch>
           <Route path="/app">
             {players.map(player => (
@@ -126,6 +127,10 @@ function App({ count, increment, decrement }) {
                 <AskPopup userSum={player.sum} takeCard={() => takeCard(player.name)} endTurn={() => endTurn(player.name)} />
               </div>
             ))}
+
+
+
+            <AskPopup userSum={0} takeCard={() => { }} endTurn={() => { }} />
             <Player name='Dealer' score={dealerSum} />
             {isDealerTurnEnd && <Alert dealerSum={dealerSum} users={favoriteUsers} />}
           </Route>
@@ -144,7 +149,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   increment: () => dispatch(increment()),
-  decrement: () => dispatch(decrement())
+  decrement: () => dispatch(decrement()),
+  decrement2: () => dispatch(decrement2())
 })
 
 export default connect(

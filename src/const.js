@@ -2,6 +2,7 @@ const CONSTANTS = {
     ACTIONS: {
         INCREMENT: 'INCREMENT',
         DECREMENT: 'DECREMENT',
+        DECREMENT2: 'DECREMENT2',
     }
 }
 

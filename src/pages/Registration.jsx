@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from "react-router-dom";
 
-export default function Registration({ addPlayer, players, updatePlayerName }) {
+export default function Registration({ addPlayer, players, updatePlayerName, counterPlayer }) {
     const handleAddPlayer = () => {
         addPlayer();
     }
@@ -22,7 +22,6 @@ export default function Registration({ addPlayer, players, updatePlayerName }) {
                 }
             </ul>
             <button onClick={handleAddPlayer}>+</button>
-
             <Link to="/app">Login</Link>
         </div>
     )

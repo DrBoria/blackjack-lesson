@@ -5,12 +5,17 @@ const counter = (state = { count: 0 }, action) => {
     case CONSTANTS.ACTIONS.INCREMENT:
       return {
         ...state,
-        count: state.count + 1
+        count: state.count + action.payload
       }
     case CONSTANTS.ACTIONS.DECREMENT:
       return {
         ...state,
         count: state.count - 1
+      }
+    case CONSTANTS.ACTIONS.DECREMENT2:
+      return {
+        ...state,
+        count: state.count - 2
       }
     default:
       return state
