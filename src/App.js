@@ -1,21 +1,20 @@
 import { useState } from 'react';
 import './App.css';
-import Player from 'components/Player';
-import AskPopup from 'components/AskPopup/AskPopup';
 import { getCard } from 'features/deck';
-import Alert from 'components/Alert/Alert';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Link
 } from "react-router-dom";
+
 import Registration from 'pages/Registration';
+import AppPage from 'pages/AppPage';
+import PhotoPage from 'pages/PhotoPage';
 
 // Redux
 import { decrement, increment } from 'actionCreators/counter';
 import { connect } from 'react-redux';
-import AppPage from 'pages/AppPage';
 
 function App({ count, increment, decrement }) {
   // Model Section
@@ -92,6 +91,9 @@ function App({ count, increment, decrement }) {
             <li>
               <Link to="/app">App</Link>
             </li>
+            <li>
+              <Link to="/photos">Photos</Link>
+            </li>
           </ul>
         </nav>
         {count}
@@ -100,6 +102,9 @@ function App({ count, increment, decrement }) {
         <Switch>
           <Route path="/app">
             <AppPage isDealerTurnEnd={isDealerTurnEnd} takeCard={takeCard} endTurn={endTurn} dealerSum={dealerSum} favoriteUsers={favoriteUsers} />
+          </Route>
+          <Route path="/photos">
+            <PhotoPage />
           </Route>
           <Route path="/">
             <Registration />
